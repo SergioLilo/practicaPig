@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                 numtirado++
 
                 if (numtirado!=0)binding.pasarID.visibility=View.VISIBLE
+
                 if (dado==1) {
                     numTurno++
                     if (numTurno==num){
@@ -62,9 +63,11 @@ class MainActivity : AppCompatActivity() {
                         turno++
                         binding.rondaID.text= "RONDA: "+turno
                     }
+                    binding.TurnJug.text= "Turno del Jugador "+(numTurno+1)
                     binding.pasarID.visibility=View.GONE
                     numtirado=0
                 }
+
                 binding.pasarID.setOnClickListener{
                     numTurno++
                     if (numTurno==num) {
