@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                     binding.pasarID.visibility=View.GONE
                     numtirado=0
                 }
+                    //
 
                 binding.pasarID.setOnClickListener{
                     numTurno++
