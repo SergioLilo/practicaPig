@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         var num: Int=0
         var numTurno=0
         var jugadores = ArrayList<Jugador>()
-        var rondas:Int=4
+        var rondas:Int=5
 
         binding.eleccionNum.setOnCheckedChangeListener { _, id ->
             val radioButton = findViewById<RadioButton>(id)
@@ -178,6 +178,7 @@ class MainActivity : AppCompatActivity() {
         binding.botonTirar.visibility = View.GONE
         binding.rondaID.visibility = View.GONE
         binding.puntJUG.visibility = View.GONE
+        quitarDado(binding)
         clasificacion(binding, jugadores)
         binding.IDganador.visibility = View.VISIBLE
         //jugadores.sortedBy { it.puntuacion }
