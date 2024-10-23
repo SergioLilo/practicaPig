@@ -1,6 +1,9 @@
 package com.example.practicapig
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
@@ -17,13 +20,8 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.botonTirar.visibility=View.GONE
-        binding.puntJUG.visibility=View.GONE
-        binding.TurnJug.visibility=View.GONE
-        binding.pasarID.visibility=View.GONE
-        binding.rondaID.visibility=View.GONE
-        binding.clasificacionID.visibility=View.GONE
-        binding.IDganador.visibility=View.GONE
+        ocultarElementos(binding)
+
         var texto = ""
         var num: Int=0
         var numTurno=0
@@ -33,9 +31,10 @@ class MainActivity : AppCompatActivity() {
         binding.eleccionNum.setOnCheckedChangeListener { _, id ->
             val radioButton = findViewById<RadioButton>(id)
             texto = radioButton.text.toString()
-        }
 
+        }
         binding.salirID.setOnClickListener {
+
             num = pulsarBoton(texto, num)
             for (i in 1..num) {
                 jugadores.add(Jugador("Jugador "+i))
@@ -48,14 +47,22 @@ class MainActivity : AppCompatActivity() {
             binding.clasificacionID.visibility=View.VISIBLE
             binding.rondaID.text= "RONDA: "+turno
 
+
                 binding.botonTirar.setOnClickListener {
-
+                    quitarDado(binding)
                 dado=jugadores[numTurno].tirar()
-                binding.puntJUG.text="EL JUGADOR "+(numTurno+1)+" HA SACADO "+dado
-                numtirado++
 
-                if (numtirado!=0)binding.pasarID.visibility=View.VISIBLE
+                    Handler().postDelayed({
+                        binding.pasarID.visibility=View.GONE
+                        binding.botonTirar.visibility=View.GONE
+                    animacion(binding)},100)
 
+                    Handler().postDelayed({
+                        if (numtirado!=0)binding.pasarID.visibility=View.VISIBLE
+                        binding.botonTirar.visibility=View.VISIBLE
+                        binding.puntJUG.text="EL JUGADOR "+(numTurno+1)+" HA SACADO "+dado
+                    ponerDado(binding,dado)},1000)
+                    numtirado++
                 if (dado==1) {
                     numTurno++
                     if (numTurno==num){
@@ -67,8 +74,6 @@ class MainActivity : AppCompatActivity() {
                     binding.pasarID.visibility=View.GONE
                     numtirado=0
                 }
-                    //
-
                 binding.pasarID.setOnClickListener{
                     numTurno++
                     if (numTurno==num) {
@@ -83,28 +88,88 @@ class MainActivity : AppCompatActivity() {
 
                     if (turno==rondas+1){
                         ganador(jugadores)
-
-
                     }
                 }
-
                 clasificacion(binding, jugadores)
                     if (turno==rondas+1){
                         ganador(jugadores)
                     }
 
             }
+        }
 
+    }
 
+    private fun ocultarElementos(binding: ActivityMainBinding) {
 
+        binding.botonTirar.visibility = View.GONE
+        binding.puntJUG.visibility = View.GONE
+        binding.TurnJug.visibility = View.GONE
+        binding.pasarID.visibility = View.GONE
+        binding.rondaID.visibility = View.GONE
+        binding.clasificacionID.visibility = View.GONE
+        binding.IDganador.visibility = View.GONE
+        binding.dado1.visibility = View.GONE
+        binding.dado2.visibility = View.GONE
+        binding.dado3.visibility = View.GONE
+        binding.dado4.visibility = View.GONE
+        binding.dado5.visibility = View.GONE
+        binding.dado6.visibility=View.GONE
+        binding.dadoRand.visibility=View.GONE
+    }
+    private fun ponerDado(binding: ActivityMainBinding,dado:Int) {
+        when (dado) {
+            1 -> binding.dado1.visibility = View.VISIBLE
+            2 -> binding.dado2.visibility = View.VISIBLE
+            3 -> binding.dado3.visibility = View.VISIBLE
+            4 -> binding.dado4.visibility = View.VISIBLE
+            5 -> binding.dado5.visibility = View.VISIBLE
+            6 -> binding.dado6.visibility = View.VISIBLE
+        }
+    }
+        private fun quitarDado(binding: ActivityMainBinding){
 
-
+               binding.dado1.visibility = View.GONE
+                binding.dado2.visibility = View.GONE
+                 binding.dado3.visibility = View.GONE
+                 binding.dado4.visibility = View.GONE
+                 binding.dado5.visibility = View.GONE
+                binding.dado6.visibility = View.GONE
 
         }
 
+    private fun animacion(binding: ActivityMainBinding){
+
+        //binding.pasarID.visibility=View.GONE
+        val carasDelDado = arrayOf(
+            R.drawable.dado1,
+            R.drawable.dado2,
+            R.drawable.dado3,
+            R.drawable.dado4,
+            R.drawable.dado5,
+            R.drawable.dado6
+        )
+
+        for (i in 1..6){
+
+        val caraAleatoria = carasDelDado[Random.nextInt(6)]
+            Handler().postDelayed({
+
+                val caraAleatoria = carasDelDado[Random.nextInt(6)]
+
+                binding.dadoRand.setImageResource(caraAleatoria)
+
+                binding.dadoRand.visibility = View.VISIBLE
+
+                Handler().postDelayed({
+                    binding.dadoRand.visibility = View.GONE
+                }, 150L)
+
+            }, (i * 200L))
+        }
 
 
-
+       // binding.pasarID.visibility=View.VISIBLE
     }
 
     private fun ganador(jugadores: ArrayList<Jugador>) {
