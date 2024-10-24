@@ -26,13 +26,14 @@ class MainActivity : AppCompatActivity() {
         var num: Int=0
         var numTurno=0
         var jugadores = ArrayList<Jugador>()
-        var rondas:Int=2
+        var rondas:Int=5
 
         binding.eleccionNum.setOnCheckedChangeListener { _, id ->
             val radioButton = findViewById<RadioButton>(id)
             texto = radioButton.text.toString()
 
         }
+
         binding.salirID.setOnClickListener {
 
             num = pulsarBoton(texto, num)
@@ -63,11 +64,13 @@ class MainActivity : AppCompatActivity() {
                     Handler().postDelayed({
                         if (numtirado != 0) binding.pasarID.visibility = View.VISIBLE
                         binding.botonTirar.visibility = View.VISIBLE
-                        //binding.puntJUG.text="EL JUGADOR "+(numTurno+1)+" HA SACADO "+dado
+                        binding.puntJUG.text="EL JUGADOR "+(numTurno+1)+" HA SACADO "+dado
                         ponerDado(binding, dado)
                         clasificacion(binding, jugadores)
                     }, 1500)
                     numtirado++
+
+                    Handler().postDelayed({
 
 
                     if (dado == 1) {
@@ -102,6 +105,7 @@ class MainActivity : AppCompatActivity() {
                         ganador(jugadores)
                     }
 
+                    },1550)
                 }
             }
         }
