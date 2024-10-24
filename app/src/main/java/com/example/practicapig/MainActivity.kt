@@ -22,11 +22,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         ocultarElementos(binding)
 
-        var texto = ""
+        var texto:String = ""
         var num: Int=0
         var numTurno=0
         var jugadores = ArrayList<Jugador>()
-        var rondas:Int=5
+        var rondas:Int=2
 
         binding.eleccionNum.setOnCheckedChangeListener { _, id ->
             val radioButton = findViewById<RadioButton>(id)
@@ -36,65 +36,73 @@ class MainActivity : AppCompatActivity() {
         binding.salirID.setOnClickListener {
 
             num = pulsarBoton(texto, num)
-            for (i in 1..num) {
-                jugadores.add(Jugador("Jugador "+i))
-            }
-            var dado:Int=0
-            var numtirado=0
-            var turno=1
-            binding.TurnJug.text= "Turno del "+jugadores.get(0).nombre
-            binding.rondaID.visibility=View.VISIBLE
-            binding.clasificacionID.visibility=View.VISIBLE
-            binding.rondaID.text= "RONDA: "+turno
+
+            if (num != 0) {
+                for (i in 1..num) {
+                    jugadores.add(Jugador("Jugador " + i))
+                }
+                var dado: Int = 0
+                var numtirado = 0
+                var turno = 1
+                binding.TurnJug.text = "Turno del " + jugadores.get(0).nombre
+                binding.rondaID.visibility = View.VISIBLE
+                binding.clasificacionID.visibility = View.VISIBLE
+                binding.rondaID.text = "RONDA: " + turno
 
 
                 binding.botonTirar.setOnClickListener {
                     quitarDado(binding)
-                dado=jugadores[numTurno].tirar()
+                    dado = jugadores[numTurno].tirar()
+                    Handler().postDelayed({
+                        binding.pasarID.visibility = View.GONE
+                        binding.botonTirar.visibility = View.GONE
+                        animacion(binding)
+
+                    }, 50)
 
                     Handler().postDelayed({
-                        binding.pasarID.visibility=View.GONE
-                        binding.botonTirar.visibility=View.GONE
-                    animacion(binding)},100)
-
-                    Handler().postDelayed({
-                        if (numtirado!=0)binding.pasarID.visibility=View.VISIBLE
-                        binding.botonTirar.visibility=View.VISIBLE
-                        binding.puntJUG.text="EL JUGADOR "+(numTurno+1)+" HA SACADO "+dado
-                    ponerDado(binding,dado)},1000)
+                        if (numtirado != 0) binding.pasarID.visibility = View.VISIBLE
+                        binding.botonTirar.visibility = View.VISIBLE
+                        //binding.puntJUG.text="EL JUGADOR "+(numTurno+1)+" HA SACADO "+dado
+                        ponerDado(binding, dado)
+                        clasificacion(binding, jugadores)
+                    }, 1500)
                     numtirado++
-                if (dado==1) {
-                    numTurno++
-                    if (numTurno==num){
-                        numTurno=0
-                        turno++
-                        binding.rondaID.text= "RONDA: "+turno
-                    }
-                    binding.TurnJug.text= "Turno del Jugador "+(numTurno+1)
-                    binding.pasarID.visibility=View.GONE
-                    numtirado=0
-                }
-                binding.pasarID.setOnClickListener{
-                    numTurno++
-                    if (numTurno==num) {
-                        numTurno=0
-                        turno++
-                        binding.rondaID.text= "RONDA: "+turno
-                    }
-                    binding.pasarID.visibility=View.GONE
-                    binding.TurnJug.text= "Turno del Jugador "+(numTurno+1)
-                    numtirado=0
-                    clasificacion(binding,jugadores);
 
-                    if (turno==rondas+1){
+
+                    if (dado == 1) {
+                        numTurno++
+                        if (numTurno == num) {
+                            numTurno = 0
+                            turno++
+                            binding.rondaID.text = "RONDA: " + turno
+                        }
+                        binding.TurnJug.text = "Turno del Jugador " + (numTurno + 1)
+                        binding.pasarID.visibility = View.GONE
+                        numtirado = 0
+                    }
+                    binding.pasarID.setOnClickListener {
+                        numTurno++
+                        if (numTurno == num) {
+                            numTurno = 0
+                            turno++
+                            binding.rondaID.text = "RONDA: " + turno
+                        }
+                        binding.pasarID.visibility = View.GONE
+                        binding.TurnJug.text = "Turno del Jugador " + (numTurno + 1)
+                        numtirado = 0
+                       // clasificacion(binding, jugadores);
+
+                        if (turno == rondas + 1) {
+                            ganador(jugadores)
+                        }
+                    }
+                   // clasificacion(binding, jugadores)
+                    if (turno == rondas + 1) {
                         ganador(jugadores)
                     }
-                }
-                clasificacion(binding, jugadores)
-                    if (turno==rondas+1){
-                        ganador(jugadores)
-                    }
 
+                }
             }
         }
 
