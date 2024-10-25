@@ -18,10 +18,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        ocultarElementos(binding)
+        setContentView(R.layout.splash_screen);
 
+        Handler().postDelayed({
+
+
+            binding = ActivityMainBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+            ocultarElementos(binding)
         var texto:String = ""
         var num: Int=0
         var numTurno=0
@@ -109,8 +113,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
+        },3000)
     }
+
 
     private fun ocultarElementos(binding: ActivityMainBinding) {
 
